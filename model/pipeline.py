@@ -12,6 +12,8 @@ import numpy as np
 import pandas as pd
 import csv
 
+from io import BytesIO
+from PIL import Image
 from pathlib import Path
 from ultralytics import YOLO
 from collections import defaultdict
@@ -77,7 +79,7 @@ class CG_Pipeline:
         return bottom_points, transformed_bottom_points
 
     #draw a graph showing a bird's eye view of the selected region
-    def bird_eye_view(frame, label_df, df, color_label_dict, scale_w, scale_h):
+    def bird_eye_view(frame, df, color_label_dict):
         h,w = frame.shape[0],frame.shape[1]
         blank_image = np.zeros((int(h), int(w), 3), np.uint8)
         white = (255, 255, 255)
@@ -166,7 +168,7 @@ class CG_Pipeline:
         return frame
 
     #label the crowd density + draw boxes around subclusters of points
-    def label_crowd_density(frame, label_groups, color_label_dict,font_size, circle_radius):
+    def label_crowd_density(frame, label_groups, color_label_dict, circle_radius):
         for label, group in label_groups.groupby('labels'):
             if label != -1:
                 crowd_density = group['people_per_m2'].iloc[0]
@@ -196,8 +198,35 @@ class CG_Pipeline:
                 cv2.putText(frame, text_speed, (min_x, min_y), cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
                 # cv2.rectangle(frame, (int(min_x), int(min_y)), (int(min_x + t_size[0]), int(min_y + t_size[1])), (colors[label]), -1, cv2.LINE_AA)
         return frame
+    
+    #cluster groups based on distance, with labels where -1 is noise and any number >= 0 is a distinct subcluster
+    def cluster_groups(distance_matrix_dbscan):
+        #set eps to 500cm and minimum of 4 people in a group 
+        eps = 500
+        min_samples = 4
+        distance_matrix_dbscan = np.array(distance_matrix_dbscan)
+        db = DBSCAN(eps=eps, min_samples=min_samples, metric='precomputed')
+        db.fit_predict(distance_matrix_dbscan)
+        return db.labels_
 
-    def make_pd_threshold_calculation(self, frame, frame_number):
+    
+
+    def convert_ax_to_image(ax):
+        # Draw the canvas
+        ax.figure.canvas.draw()
+
+        # Convert to a numpy array
+        buf = ax.figure.canvas.tostring_rgb()
+        ncols, nrows = ax.figure.canvas.get_width_height()
+        img = np.frombuffer(buf, dtype=np.uint8).reshape(nrows, ncols, 3)
+        
+        # Convert to BGR for OpenCV
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        
+        return img
+
+
+    def pipeline(self, frame, frame_number):
         # resize if needed, but YOLO works best with original dimensions
         # frame = cv2.resize(frame, (800, 600))
 
@@ -241,22 +270,14 @@ class CG_Pipeline:
 
         #get the bottom center points of each bbox untransformed and transformed
         bottom_points_untransformed, bottom_points_transformed = self.transform_points(bboxes, matrix)
+        bottom_points_transformed = np.array(bottom_points_transformed)
 
         #change the distance from pixels to cm
         distance_matrix_dbscan = self.convert_distance_calculation(bottom_points_transformed, scale_factor)
 
         #Perform unsupervised learning to group subclusters of crowds using distance matrix
-        #set eps to 500cm and minimum of 4 people in a group 
-        eps = 500
-        min_samples = 4
-        distance_matrix_dbscan = np.array(distance_matrix_dbscan)
-        db = DBSCAN(eps=eps, min_samples=min_samples, metric='precomputed')
-        db.fit_predict(distance_matrix_dbscan)
-
-        #labels of subclusters where -1 is noise and any number >= 0 is a distinct subcluster
-        labels = db.labels_
-
-        bottom_points_transformed = np.array(bottom_points_transformed)
+        labels = self.cluster_groups(distance_matrix_dbscan)
+        
 
         #make a panda dataframe with the bbox coordinates, bottom points transformed and untransformed, distance matrix, labels 
         df = pd.DataFrame(list(zip(bboxes, bottom_points_untransformed, bottom_points_transformed, distance_matrix_dbscan, labels)),
@@ -365,8 +386,10 @@ class CG_Pipeline:
         # Show the plots
         plt.show()
 
-        #close the figure
-        plt.close(fig)
+        #convert ax to image 
+        ax1 = self.convert_ax_to_image(ax1)
+        ax2 = self.convert_ax_to_image(ax2)
+
         return ax1, ax2, label_df
 
     #TODO: Dorothy fills in
