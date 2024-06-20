@@ -20,7 +20,7 @@ from collections import defaultdict
 from sklearn.cluster import DBSCAN
 
 class CG_Pipeline:
-    def __init__(self, fps, corners, interval_speed_calculation,):
+    def __init__(self, fps, corners, interval_speed_calculation):
         self.corners_points_arr = corners
         self.fps = fps
         #instantiate the yolo model for person detection
@@ -47,7 +47,7 @@ class CG_Pipeline:
     
 
     #calculate the scale factor for converting pixels to cm
-    def calculate_scale_factor(boxes_ref) :
+    def calculate_scale_factor(self, boxes_ref) :
         # Global average height of person: Women ~ 162 cm | Men ~ 175 cm (https://www.dryukselyurttas.com/post/average-height-men-and-women)
         # (162 + 175) / 2 = 168.5 cm
         global_average_height = (162 + 175) / 2
@@ -66,7 +66,7 @@ class CG_Pipeline:
 
 
     # Function to transform points + get the bottom most point of the bounding boxes
-    def transform_points(boxes, matrix):
+    def transform_points(self, boxes, matrix):
         bottom_points = []
         transformed_bottom_points = []
         for box in boxes:
@@ -79,7 +79,7 @@ class CG_Pipeline:
         return bottom_points, transformed_bottom_points
 
     #draw a graph showing a bird's eye view of the selected region
-    def bird_eye_view(frame, df, color_label_dict):
+    def bird_eye_view(self, frame, df, color_label_dict):
         h,w = frame.shape[0],frame.shape[1]
         blank_image = np.zeros((int(h), int(w), 3), np.uint8)
         white = (255, 255, 255)
@@ -96,7 +96,7 @@ class CG_Pipeline:
         return blank_image
 
     # Function to calculate distance
-    def calculate_distance(p1, p2, scale_factor):
+    def calculate_distance(self, p1, p2, scale_factor):
         h = abs(p2[1] - p1[1])
         v = abs(p2[0] - p1[0])
         dist_v = float(v * scale_factor)
@@ -118,7 +118,7 @@ class CG_Pipeline:
         return distance_matrix_dbscan
 
     # estimate the speed of the function
-    def speed_estimate(coords, latest_coord, frames_per_interval, fps):
+    def speed_estimate(self, coords, latest_coord, frames_per_interval, fps):
         new_speeds = {}
         for track_id in coords:
             if track_id in latest_coord:
@@ -136,7 +136,7 @@ class CG_Pipeline:
         return latest_coord, new_speeds
 
     # Get average speed of subgroups
-    def get_average_speed_subgroup(speeds):
+    def get_average_speed_subgroup(self, speeds):
         group_speeds = defaultdict(list)
         # Group speeds by subgroup
         for _, (speed, sub_group) in speeds.items():
@@ -157,7 +157,7 @@ class CG_Pipeline:
 
 
     # create points on the bottom points of the boundary boxes and color based on label:
-    def circle_crowd(frame, bboxes_untransformed, color_label_dict, circle_radius):
+    def circle_crowd(self, frame, bboxes_untransformed, color_label_dict, circle_radius):
         for _, person in bboxes_untransformed.iterrows():
             x, y = person['untransformed_bottom_points']
             center = (int(x),int(y))
@@ -167,8 +167,13 @@ class CG_Pipeline:
         frame = cv2.circle(frame,center,circle_radius,color=color, thickness=-1)
         return frame
 
+    #TODO: Dorothy fills in
+    def calculate_crowd_disaster_potential(pd_df):
+        pass
+
+
     #label the crowd density + draw boxes around subclusters of points
-    def label_crowd_density(frame, label_groups, color_label_dict, circle_radius):
+    def label_crowd_density(self, frame, label_groups, color_label_dict, circle_radius):
         for label, group in label_groups.groupby('labels'):
             if label != -1:
                 crowd_density = group['people_per_m2'].iloc[0]
@@ -200,7 +205,7 @@ class CG_Pipeline:
         return frame
     
     #cluster groups based on distance, with labels where -1 is noise and any number >= 0 is a distinct subcluster
-    def cluster_groups(distance_matrix_dbscan):
+    def cluster_groups(self, distance_matrix_dbscan):
         #set eps to 500cm and minimum of 4 people in a group 
         eps = 500
         min_samples = 4
@@ -208,10 +213,9 @@ class CG_Pipeline:
         db = DBSCAN(eps=eps, min_samples=min_samples, metric='precomputed')
         db.fit_predict(distance_matrix_dbscan)
         return db.labels_
-
-    
-
-    def convert_ax_to_image(ax):
+        
+    #convert matplot axes to images
+    def convert_ax_to_image(self, ax):
         # Draw the canvas
         ax.figure.canvas.draw()
 
@@ -225,7 +229,7 @@ class CG_Pipeline:
         
         return img
 
-
+    #RUN the actual pipeline
     def pipeline(self, frame, frame_number):
         # resize if needed, but YOLO works best with original dimensions
         # frame = cv2.resize(frame, (800, 600))
@@ -381,18 +385,14 @@ class CG_Pipeline:
 
 
         # Concatenate the frame and the density map for side-by-side display
-        plt.tight_layout()
+        #plt.tight_layout()
 
         # Show the plots
-        plt.show()
+        #plt.show()
 
         #convert ax to image 
         ax1 = self.convert_ax_to_image(ax1)
         ax2 = self.convert_ax_to_image(ax2)
+        label_df = calculate_crowd_disaster_potential(label_df)
 
         return ax1, ax2, label_df
-
-    #TODO: Dorothy fills in
-    def calculate_crowd_disaster_potential(pd_df):
-        
-        pass
