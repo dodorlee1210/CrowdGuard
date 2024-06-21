@@ -445,7 +445,7 @@ class CG_Pipeline():
 
 
         #convert ax to image
-        potential_for_crowd_crush = self.calculate_crowd_disaster_potential(label_df)
+        potential_for_crowd_crush = self.predict_disaster(label_df)
         bird_eye_view_image = self.convert_plt_to_image(plt)
       else:
         ("fere")
