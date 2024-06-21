@@ -53,10 +53,9 @@ class CG_Pipeline():
       global_average_height = (162 + 175) / 2
 
       # unzip the boundary box coordinates separated by xmin, ymin, width and height of the boxes
-      _, _, width, height = zip(*boxes_ref)
+      _, _, _, height = zip(*boxes_ref)
 
-      # average width and height of pixel dimensions
-      W_avg = sum(width) / len(width)
+      # average height of pixel dimensions
       H_avg = sum(height) / len(height)
 
       # scale factor cm/pixels
@@ -117,8 +116,9 @@ class CG_Pipeline():
       return distance_matrix_dbscan
 
     # estimate the speed of the function
-    def speed_estimate(self, coords, latest_coord, frames_per_interval, fps):
+    def speed_estimate(self, latest_coord):
       new_speeds = {}
+      coords = self.coords
       for track_id in coords:
         if track_id in latest_coord:
           sub_group = latest_coord[track_id][1]
@@ -126,17 +126,17 @@ class CG_Pipeline():
           pos_latest = np.array(latest_coord[track_id][0])
 
           # 2 seconds
-          time_diff = frames_per_interval / fps 
+          time_diff = self.frames_per_interval / self.fps 
           displacement = np.linalg.norm(pos_latest - pos_curr)
           speed = displacement / time_diff
           new_speeds[track_id] = [speed, sub_group]
       return latest_coord, new_speeds
 
     # Get average speed of subgroups
-    def get_average_speed_subgroup(self, speeds):
+    def get_average_speed_subgroup(self):
       group_speeds = defaultdict(list)
       # Group speeds by subgroup
-      for _, (speed, sub_group) in speeds.items():
+      for _, (speed, sub_group) in self.speeds.items():
         sub_group_key = int(sub_group)
         group_speeds[sub_group_key].append(speed)
 
@@ -258,12 +258,12 @@ class CG_Pipeline():
       scale_factor = self.calculate_scale_factor(bboxes)
 
       H, W = frame.shape[:2]
-      font_size = H / 12
+      fontsize = H / 12
 
       img_params = np.float32([[W, 0], [W, H], [0, H], [0, 0]])
       #get perspective transformation matrix with the points 
       matrix = cv2.getPerspectiveTransform(self.corner_points_arr, img_params)
-      #transform the image with the transformation matrix
+      #transform the image with the transformation matrix, visualize img_transformed to see warped image
       img_transformed = cv2.warpPerspective(frame, matrix, (W, H))
 
       #get the bottom center points of each bbox untransformed and transformed
@@ -312,8 +312,8 @@ class CG_Pipeline():
           self.coords = latest_coord
         else:
             # if not the second frame, estimate the speed
-          self.coords, speeds = self.speed_estimate(coords, latest_coord, self.frames_per_interval, self.fps, self.speeds)
-          self.speeds = self.get_average_speed_subgroup(self.speeds)
+          self.coords, self.speeds = self.speed_estimate(latest_coord)
+          self.speeds = self.get_average_speed_subgroup()
           label_df['speed_per_group'] = label_df['labels'].map(self.speeds)
         
 
@@ -348,7 +348,6 @@ class CG_Pipeline():
           max_y =  max_y + circle_radius
           speed = row['speed_per_group'].values[0]
           density = row['people_per_m2'].values[0]
-          fontsize = 9
 
           ax.text(min_x, min_y-(fontsize*10), f'D: {density:.3f}\nS: {speed:.3f}', fontsize=fontsize, color='black', va='top')
           rect = patches.Rectangle((min_x, min_y), (max_x - min_x), (max_y - min_y), edgecolor=col, facecolor='none')
