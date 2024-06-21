@@ -211,9 +211,11 @@ class CG_Pipeline():
     """
     def get_mode_likelihoods(likelihoods: list[int]) -> int:
       if len(likelihoods) == 0:
-        return -1
+          return -1
+      elif len(likelihoods) == 2:
+          return max(likelihoods)
       else:
-        return max(set(likelihoods), key=likelihoods.count)
+          return max(set(likelihoods), key=likelihoods.count)
 
     """
       Predict crowd crush risk for given image.
