@@ -165,9 +165,71 @@ class CG_Pipeline():
       return frame
 
     #TODO: Dorothy fills in
-    def calculate_crowd_disaster_potential(pd_df):
-      return pd_df
+    """
+      Data preprocessing for crowd crush risk assessment.
+      df: model output dataframe containing crowd density and flow rate
+    """    
+    def preprocess_model_output(df: pd.DataFrame) -> pd.DataFrame:
+      # Only calculate for labels >= 0
+      df = df[df["labels"] >= 0]
+    
+      # Extract speed & density values with error handling for 'e' notation, remove
+      df_filtered = df[~df['people_per_m2'].isin(['e'])]
+      df_filtered = df_filtered[~df_filtered['speed_per_group'].isin(['e'])]
+    
+      df_filtered.dropna(inplace=True)
+      return df_filtered
+        
 
+    """
+      Return likelhood of a crowd crush.
+      flow rate: m/s
+      density: people/m^2
+    """
+    def assess_crowd_crush_risk(flow_rate: float, density: float) -> int:
+      # Thresholds defined based on Moussaid's research image
+      congestion_threshold_flow = 1.2
+      congestion_threshold_density = 5
+      crush_threshold_flow = 0.3
+      crush_threshold_density = 7
+    
+      if flow_rate >= crush_threshold_flow and density >= crush_threshold_density:
+        return 2
+        # "High Risk - Crowd Crush Likely"
+      elif flow_rate >= congestion_threshold_flow and density >= congestion_threshold_density:
+        return 1
+        # "Medium Risk - Congestion Possible"
+      else:
+        return 0
+        # "Low Risk - Monitor Conditions"'
+
+
+    """
+      Return mode of list of likelhoods.
+      Returns -1 if list is empty.
+      likelihoods: list of int likelhoods of crowd crush (0~2)
+    """
+    def get_mode_likelihoods(likelihoods: list[int]) -> int:
+      if len(likelihoods) == 0:
+        return -1
+      else:
+        return max(set(likelihoods), key=likelihoods.count)
+
+    """
+      Predict crowd crush risk for given image.
+      df: model output dataframe containing crowd density and flow rate
+    """
+    def predict_disaster(df: pd.DataFrame) -> int:
+      data = preprocess_model_output(df)
+      speed = data['speed_per_group'].iloc[:]
+      density = data['people_per_m2'].iloc[:]
+    
+      likelihoods = []
+      for i in range(0, len(speed)):
+        likelihoods.append(assess_crowd_crush_risk(speed.iloc[i], density.iloc[i]))
+    
+      return get_mode_likelihoods(likelihoods)
+        
 
     #label the crowd density + draw boxes around subclusters of points
     def label_crowd_density(self, frame, label_groups, color_label_dict, circle_radius):
