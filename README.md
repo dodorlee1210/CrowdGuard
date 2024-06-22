@@ -2,14 +2,14 @@
 ![alt text](./images/updated_logo.png)
 
 # Table of Contents
-* [Team Members](#team-members)
+* [Team PANDO](#team-members)
 * [Project Description](#project-description)
 * [Project Demo](#project-demo)
 * [Ethical Considerations](#ethical-considerations)
 * [Future Directions](#future-directions)
 * [Contact Us](#contact-us)
 
-# <a name="team-members"></a>Team Members
+# <a name="team-members"></a>Team PANDO
 * **P**earl Park
 * **A**yesha Halim
 * **N**azanin Mehregan 
