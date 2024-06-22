@@ -164,7 +164,6 @@ class CG_Pipeline():
       frame = cv2.circle(frame,center,circle_radius,color=color, thickness=-1)
       return frame
 
-    #TODO: Dorothy fills in
     """
       Data preprocessing for crowd crush risk assessment.
       df: model output dataframe containing crowd density and flow rate
@@ -287,7 +286,8 @@ class CG_Pipeline():
     def calculate_crowd_disaster_potential(self, label_df):
       return 0
 
-    #RUN the actual pipeline
+    # RUN the actual pipeline
+    # perspective transformation code adapted from: https://medium.com/@joicejoseph/monitor-social-distancing-using-python-yolov5-opencv-78d72c675f5b
     def pipeline(self, frame, frame_number):
       # resize if needed, but YOLO works best with original dimensions
       # frame = cv2.resize(frame, (800, 600))
