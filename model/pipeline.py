@@ -397,9 +397,13 @@ class CG_Pipeline():
 
 
         # create the color dictionary for each label and plot each of the points on the graph
-        for k, col in zip(unique_labels, colors):
+        for k in unique_labels:
           if k == -1:
-            col = [0, 0, 0, 1]  # noise points are colored grey
+            # noise points (-1) are colored grey
+            col = [0, 0, 0, 1]  
+          else:
+            # other labels are neon blue
+            col = [0, 0.92391, 1, 1] 
           color_label_dict.update({k:col})
           class_member_mask = (labels == k)
           xy = bottom_points_transformed[class_member_mask]
