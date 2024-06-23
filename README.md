@@ -28,6 +28,11 @@
 ![alt text](./images/features.png)
 ![alt text](./images/pipeline_design.png)
 
+# <a name="prototype"></a>Figma Prototype
+https://github.com/dodorlee1210/CrowdGuard/assets/123223901/00a3c1bf-8d40-4d4f-9220-82183d682b53
+
+
+
 # <a name="project-demo"></a>Project Demo
 (demo video/images)
 
