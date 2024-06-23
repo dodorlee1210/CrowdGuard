@@ -51,7 +51,7 @@
   *   If possible, get more info on the orientation of the surveillance camera
  
 * Prototype
-  * ![alt text](./images/prototype.png | height=100px)
+![alt text](./images/prototype.png)
     
 
 # <a name="contact-us"></a>Contact Us
