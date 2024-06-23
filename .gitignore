@@ -1,1 +1,6 @@
 node_modules
+crowd-guard-app/backend/venv/bin
+crowd-guard-app/backend/venv/lib
+crowd-guard-app/backend/venv/include
+crowd-guard-app/backend/venv/lib64
+
