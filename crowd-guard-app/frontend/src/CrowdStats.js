@@ -1,9 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, IconButton, Stack } from '@mui/material';
-  
-export default function CrowdStats() {
+import { Box, Typography, Stack } from '@mui/material';
+import io from 'socket.io-client';
 
+const socket = io('http://127.0.0.1:5000');
+
+export default function CrowdStats() {
     const [riskScore, setRiskScore] = useState(null);
+    const [currentFrame, setCurrentFrame] = useState("");
+
+    useEffect(() => {
+        socket.on('frame', data => {
+            setCurrentFrame(data.frame_density);
+        });
+
+        socket.on('processing_complete', () => {
+            console.log('Processing complete');
+        });
+
+        return () => {
+            socket.off('frame');
+            socket.off('processing_complete');
+        };
+    }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -20,82 +38,68 @@ export default function CrowdStats() {
             borderColor = '#B2FBA5';
             riskText = 'Low';
             break;
-          case 1:
+        case 1:
             borderColor = '#FFEE93';
             riskText = 'Medium';
             break;
-          case 2:
+        case 2:
             borderColor = '#FF7F78';
             riskText = 'High';
             break;
-          default:
+        default:
             borderColor = '#D59F39';
             riskText = 'Loading...';
-        }
-    
+    }
 
     return (
-      <Box className="App" sx={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-        
-        <Stack direction="row" spacing={10} sx={{ alignItems: 'center'}}>
-            <Box
-                sx={{
-                    backgroundColor: 'grey',
-                    height: '55vh',
-                    width: '55vw',
-                    borderRadius: 2,
-                  }}>
-            </Box>
-            <Stack direction="column" spacing={2}>
-                <Typography sx={{fontFamily: 'Roboto Mono', color: '#D59F39', fontSize: '1.2rem'}}>Disaster Risk</Typography>
-                <Box 
-                    sx={{ 
-                        backgroundColor: 'grey', 
-                        height: '15vh', 
-                        width: '19.5vw', 
-                        display: 'flex', 
-                        alignItems: 'center', 
+        <Box sx={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+            <Stack direction="row" spacing={5} sx={{ alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        backgroundColor: 'grey',
+                        height: '55vh',
+                        width: '55vw',
+                        borderRadius: 2,
+                        display: 'flex',
                         justifyContent: 'center',
-                        borderRadius: 5,
-                        border: `2px solid ${borderColor}`, 
+                        alignItems: 'center',
+                        overflow: 'hidden'
                     }}
                 >
-                    <Typography sx={{ fontFamily: 'Roboto Mono', color: borderColor, fontSize: '2.5rem'}}>
-                        {riskText}</Typography>
+                    {currentFrame && (
+                        <img 
+                            src={`data:image/jpeg;base64,${currentFrame}`}
+                            alt="Video Frame"
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                objectFit: 'contain'
+                            }}
+                        />
+                    )}
                 </Box>
-                {/* <Stack direction="row" spacing={2}>
-                    <Box 
-                        sx={{ 
-                            backgroundColor: 'grey', 
-                            height: '30vh', 
-                            width: '15vw', 
-                            display: 'flex', 
-                            alignItems: 'stretch', 
+                <Stack direction="column" spacing={2} sx={{ alignItems: 'center' }}>
+                    <Typography sx={{ fontFamily: 'Roboto Mono', color: '#D59F39', fontSize: '1.2rem', textAlign: 'center' }}>
+                        Disaster Risk
+                    </Typography>
+                    <Box
+                        sx={{
+                            backgroundColor: 'grey',
+                            height: '15vh',
+                            width: '19.5vw',
+                            display: 'flex',
+                            alignItems: 'center',
                             justifyContent: 'center',
                             borderRadius: 5,
-                            border: '2px solid #D59F39',
+                            border: `2px solid ${borderColor}`,
                         }}
                     >
-                        <Typography>Crowd Flow</Typography>
+                        <Typography sx={{ fontFamily: 'Roboto Mono', color: borderColor, fontSize: '2.5rem' }}>
+                            {riskText}
+                        </Typography>
                     </Box>
-                    <Box 
-                        sx={{ 
-                            backgroundColor: 'grey', 
-                            height: '30vh', 
-                            width: '15vw', 
-                            display: 'flex', 
-                            alignItems: 'stretch', 
-                            justifyContent: 'center',
-                            borderRadius: 5,
-                            border: '2px solid #D59F39',
-                        }}
-                    >
-                        <Typography>Crowd Density</Typography>
-                    </Box>
-                </Stack> */}
+                </Stack>
             </Stack>
-        </Stack>
-      </Box>
+        </Box>
     );
 }
-

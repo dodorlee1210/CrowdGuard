@@ -16,24 +16,24 @@ import CameraView from './CameraView';
 
 function App() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <h1>Welcome to the Crowd Guard App</h1>
-            </header>
-            <main>
-                <VideoUploader />
-            </main>
-        </div>
+        // <div className="App">
+        //     <header className="App-header">
+        //         <h1>Welcome to the Crowd Guard App</h1>
+        //     </header>
+        //     <main>
+        //         <VideoUploader />
+        //     </main>
+        // </div>
 
-        // <Router>
-        //   <Navbar />
-        //     <Routes>
-        //         <Route path="/" element={<LandingPage />} />
-        //         <Route path="/crowd-stats" element={<CrowdStats />} />
-        //         <Route path="/map" element={<Map />} />
-        //         <Route path="/camera-view" element={<CameraView />} />
-        //     </Routes>
-        // </Router>
+        <Router>
+          <Navbar />
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/crowd-stats" element={<CrowdStats />} />
+                <Route path="/map" element={<Map />} />
+                <Route path="/camera-view" element={<CameraView />} />
+            </Routes>
+        </Router>
     );
 }
 
