@@ -49,9 +49,6 @@
   *   Further image preprocessing techniques to allow for more accurate results on different videos (low resolution, night, day) with the YOLO v8 model
   *   Better scaling factor decision base on objects of known dimensions
   *   If possible, get more info on the orientation of the surveillance camera
- 
-* Prototype
-![alt text](./images/prototype.png)
     
 
 # <a name="contact-us"></a>Contact Us
