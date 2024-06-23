@@ -51,7 +51,7 @@
   *   If possible, get more info on the orientation of the surveillance camera
  
 * Prototype
-  * ![image](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/efcbd8ad-4d31-43a7-a67b-78ce4cb76376)
+  * ![alt text](./images/prototype.png | height=100px)
     
 
 # <a name="contact-us"></a>Contact Us
