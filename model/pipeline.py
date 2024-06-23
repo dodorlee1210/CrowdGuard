@@ -479,7 +479,7 @@ class CG_Pipeline():
 
 #example of running on one frame:
 if __name__ == "__main__":
-  video_path = "/home/nazanin/ai4good/CrowdGuard/crowd-guard-app/backend/venv/uploads/simulation 1m2.mp4"
+  video_path = "/content/drive/MyDrive/data/Anylogic/simulation_frames/simulation.mp4"
   cap = cv2.VideoCapture(video_path)
 
   points = [[800, 250],[1280,500], [600, 720], [150,350]]
@@ -490,7 +490,7 @@ if __name__ == "__main__":
   fps = int(cap.get(cv2.CAP_PROP_FPS))
 
   # Define codec and create VideoWriter object
-  output_video_path = '/home/nazanin/ai4good/CrowdGuard/crowd-guard-app/backend/venv/uploads/output_video.avi'
+  output_video_path = '/content/drive/MyDrive/data/Anylogic/simulation_output/output_video.avi'
   fourcc = cv2.VideoWriter_fourcc(*'XVID')
   out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
