@@ -49,7 +49,10 @@
   *   Further image preprocessing techniques to allow for more accurate results on different videos (low resolution, night, day) with the YOLO v8 model
   *   Better scaling factor decision base on objects of known dimensions
   *   If possible, get more info on the orientation of the surveillance camera
-
+ 
+* Prototype
+  * ![image](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/efcbd8ad-4d31-43a7-a67b-78ce4cb76376)
+    
 
 # <a name="contact-us"></a>Contact Us
 * If you have any questions or concerns, feel free to contact us via **pandoai4good@gmail.com**!
