@@ -186,36 +186,7 @@ function VideoUploader() {
         if (isStreaming) {
             handleStopStreaming();
         } else {
-            handleUploadAndStream();
-        }
-    };
-
-    const handleUploadAndStream = async () => {
-        if (!file) {
-            alert('Please select a video file first.');
-            return;
-        }
-
-        resetStates();
-        setIsUploading(true);
-        setIsProcessing(true);
-
-        const formData = new FormData();
-        formData.append('video', file);
-
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            setFirstFrame(response.data.first_frame);
-            setVideoPath(response.data.video_path);
-            setIsUploading(false);
-        } catch (error) {
-            console.error('Error uploading the video:', error);
-            resetStates();
-            alert('Error uploading the video. Please try again.');
+            //handleUploadAndStream();
         }
     };
 
@@ -240,7 +211,7 @@ function VideoUploader() {
                     ref={fileInputRef}
                 />
                 <button 
-                    onClick={handleToggleStreaming} 
+                    onClick={handleUpload} 
                     disabled={isUploading || !file}
                     className="upload-button"
                 >

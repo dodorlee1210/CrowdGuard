@@ -220,16 +220,17 @@ class CG_Pipeline():
       Predict crowd crush risk for given image.
       df: model output dataframe containing crowd density and flow rate
     """
+    @staticmethod
     def predict_disaster(df: pd.DataFrame) -> int:
-      data = preprocess_model_output(df)
+      data = CG_Pipeline.preprocess_model_output(df)
       speed = data['speed_per_group'].iloc[:]
       density = data['people_per_m2'].iloc[:]
     
       likelihoods = []
       for i in range(0, len(speed)):
-        likelihoods.append(assess_crowd_crush_risk(speed.iloc[i], density.iloc[i]))
+        likelihoods.append(CG_Pipeline.assess_crowd_crush_risk(speed.iloc[i], density.iloc[i]))
     
-      return get_mode_likelihoods(likelihoods)
+      return CG_Pipeline.get_mode_likelihoods(likelihoods)
         
 
     #label the crowd density + draw boxes around subclusters of points
@@ -479,7 +480,7 @@ class CG_Pipeline():
 
 #example of running on one frame:
 if __name__ == "__main__":
-  video_path = "crowd-guard-app/backend/venv/uploads/simulation 1m2.mp4"
+  video_path = "crowd-guard-app/backend/venv/uploads/simulation.mp4"
   cap = cv2.VideoCapture(video_path)
 
   points = [[800, 250],[1280,500], [600, 720], [150,350]]
