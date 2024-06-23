@@ -6,16 +6,17 @@ import cv2
 import logging
 import base64
 import numpy as np
-from pipeline import CG_Pipeline  # Import the CG_Pipeline class
+from pipeline import CG_Pipeline
+
 
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = 'crowd-guard-app/backend/venv/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-input_video_path = ''
+# input_video_path = ''
 model = None  # Initialize the model globally
 
 logging.basicConfig(level=logging.DEBUG)
@@ -59,6 +60,7 @@ def receive_points():
     global model  # Use the global model variable
     data = request.json
     points = data.get('points', [])
+    path = data.get('video_path', '')
     
     if len(points) != 4:
         return jsonify({'error': 'Exactly 4 points are required'}), 400
@@ -76,7 +78,7 @@ def receive_points():
     corner_points_arr = np.float32(points[:4])
     model = CG_Pipeline(fps=30, corners=corner_points_arr, interval_speed_calculation=2)
 
-    socketio.start_background_task(target=process_video_stream, video_path=input_video_path)
+    socketio.start_background_task(target=process_video_stream, video_path=path)
     
     return jsonify({'message': 'Points received successfully'})
 
@@ -116,7 +118,7 @@ def process_video_stream(video_path):
     finally:
         cap.release()
         try:
-            socketio.emit('processing_complete')
+            # socketio.emit('processing_complete')
             os.remove(video_path) 
             logging.info(f"Deleted input video file: {video_path}")
         except Exception as e:

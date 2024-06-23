@@ -225,7 +225,7 @@ function VideoUploader() {
         setIsStreaming(false);
         setCurrentFrame("");
         // Optionally, reset backend state when stopping streaming
-        resetBackendState();
+        // resetBackendState();
     };
 
     return (
