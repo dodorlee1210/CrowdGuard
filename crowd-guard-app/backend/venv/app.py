@@ -79,6 +79,7 @@ def receive_points():
     model = CG_Pipeline(fps=30, corners=corner_points_arr, interval_speed_calculation=2)
 
     socketio.start_background_task(target=process_video_stream, video_path=path)
+    #test
     
     return jsonify({'message': 'Points received successfully'})
 
