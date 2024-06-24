@@ -63,7 +63,7 @@ export default function LandingPage() {
           setOpenDialog(true);
         };
         reader.readAsDataURL(file);
-      } else if (fileType === 'video/mp4' || fileType === 'video/avi' || fileType === 'video/mov') {
+      } else if (fileType === 'video/mp4' || fileType === 'video/avi' || fileType === 'video/mov' || fileType === 'video/quicktime') {
         setFile(e.target.files[0]);
         setIsProcessing(true);
 
@@ -113,26 +113,32 @@ export default function LandingPage() {
     }
   }, [openDialog, firstFrame]);
 
+
   const handleCanvasClick = (e) => {
     if (points.length >= 2) return;
 
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    const scaleX = canvas.width / rect.width;  // Calculate the width scaling factor
+    const scaleY = canvas.height / rect.height;  // Calculate the height scaling factor
+
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     const newPoints = [...points, { x, y }];
     setPoints(newPoints);
     drawPoints(newPoints);
 
     if (newPoints.length === 2) {
-      calculateOtherPoints(newPoints);
-      setTimeout(() => {
-        setIsProcessing(false);
-        navigate('/crowd-stats');
-      }, 3000);
-      
+        calculateOtherPoints(newPoints);
+        setTimeout(() => {
+            setIsProcessing(false);
+            navigate('/crowd-stats');
+        }, 3000);
     }
-  };
+};
+
 
   const calculateOtherPoints = (points) => {
     const [p1, p2] = points;
@@ -163,26 +169,28 @@ export default function LandingPage() {
     }
   };
 
+
   const drawPoints = (points) => {
-    const ctx = canvasRef.current.getContext('2d');
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
     const img = new Image();
     img.onload = () => {
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      canvasRef.current.width = img.width;
-      canvasRef.current.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      points.forEach(point => {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI, false);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#003300';
-        ctx.stroke();
-      });
+        canvas.width = img.width;  // Set canvas width to image width
+        canvas.height = img.height;  // Set canvas height to image height
+        ctx.drawImage(img, 0, 0);
+        points.forEach(point => {
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#003300';
+            ctx.stroke();
+        });
     };
     img.src = 'data:image/jpeg;base64,' + firstFrame;
-  };
+};
+
 
   useEffect(() => {
     if (firstFrame && canvasRef.current) {

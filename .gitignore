@@ -3,4 +3,5 @@ crowd-guard-app/backend/venv/bin
 crowd-guard-app/backend/venv/lib
 crowd-guard-app/backend/venv/include
 crowd-guard-app/backend/venv/lib64
+CSRNet-yolov8-crowdcount/checkpoint/PartAmodel_best.pth.tar
 

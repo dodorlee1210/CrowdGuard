@@ -1,3 +1,4 @@
+from io import BytesIO
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
@@ -111,9 +112,20 @@ def process_video_stream(video_path):
                 _, buffer_ax1 = cv2.imencode('.jpg', labeled_crowd_density)
                 frame_encoded_density = base64.b64encode(buffer_ax1).decode('utf-8')
 
+                # _, buffer_ax2 = cv2.imencode('.jpg', bird_eye_view_image)
+                # frame_encoded_view = base64.b64encode(buffer_ax2).decode('utf-8')
+
+                buffered = BytesIO()
+                bird_eye_view_image.save(buffered, format="JPEG")
+                bird_eye_view_image_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
                 # Emit the frames via WebSocket
-                socketio.emit('frame', {'frame_density': frame_encoded_density})
-                logging.info(f"Emitting frame number {frame_number}")
+                socketio.emit('frame_density', {'frame_density': frame_encoded_density})
+                socketio.emit('crowd_crush', {'crowd_crush': potential_for_crowd_crush})
+                # logging.info(f"Emitting frame density number {frame_number}")
+
+                socketio.emit('frame_view', {'frame_view': bird_eye_view_image_base64})
+                # logging.info(f"Emitting frame number {frame_number}")
 
             socketio.sleep(0.03)  # Adjust for a smoother frame rate
     finally:
