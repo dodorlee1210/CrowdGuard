@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Stack } from '@mui/material';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 const socket = io('http://127.0.0.1:5000');
 
@@ -8,7 +9,7 @@ export default function CrowdStats() {
     const [riskScore, setRiskScore] = useState(null);
     const [currentFrame, setCurrentFrame] = useState("");
     const [currentView, setCurrentView] = useState("");
-    const [currentStatus, setCurrentStatus] = useState("");
+    // const [currentStatus, setCurrentStatus] = useState("");
 
     useEffect(() => {
         socket.on('frame_density', data => {
@@ -20,7 +21,7 @@ export default function CrowdStats() {
         });
 
         socket.on('crowd_crush', data => {
-            setCurrentStatus(data.crowd_crush);
+            setRiskScore(data.crowd_crush);
         });
 
         socket.on('processing_complete', () => {
@@ -35,12 +36,30 @@ export default function CrowdStats() {
         };
     }, []);
 
-    useEffect(() => {
-        setTimeout(() => {
-            const score = 1; // eventually replace with backend output
-            setRiskScore(score);
-        }, 2000);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         const score = 1; // eventually replace with backend output
+    //         setRiskScore(score);
+    //     }, 2000);
+    // }, []);
+
+    // const resetBackendState = async () => {
+    //     try {
+    //         await axios.post('http://127.0.0.1:5000/reset'); // Adjust endpoint for resetting backend state
+    //         console.log('Backend state reset successfully');
+    //     } catch (error) {
+    //         console.error('Error resetting backend state:', error);
+    //     }
+    // };
+
+    // const handleStopStreaming = async () => {
+    //     handleReset();
+    //     socket.disconnect();
+    //     setIsStreaming(false);
+    //     setCurrentFrame("");
+    //     // Optionally, reset backend state when stopping streaming
+    //     // resetBackendState();
+    // };
 
     let borderColor;
     let riskText;
@@ -149,7 +168,8 @@ export default function CrowdStats() {
                     fontSize: '1.5rem', // Adjust font size for Current Status
                   }}
                 >
-                  {currentStatus}
+                  {/* {riskScore} */}
+                  {riskText}
                 </Typography>
               </Box>
       
