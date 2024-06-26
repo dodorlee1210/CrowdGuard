@@ -7,6 +7,7 @@
 * [Project Demo](#project-demo)
 * [Ethical Considerations](#ethical-considerations)
 * [Future Directions](#future-directions)
+* [References](#references)
 * [Contact Us](#contact-us)
 
 # <a name="team-members"></a>Team PANDO
@@ -54,6 +55,14 @@ https://github.com/dodorlee1210/CrowdGuard/assets/123223901/00a3c1bf-8d40-4d4f-9
   *   Further image preprocessing techniques to allow for more accurate results on different videos (low resolution, night, day) with the YOLO v8 model
   *   Better scaling factor decision base on objects of known dimensions
   *   If possible, get more info on the orientation of the surveillance camera
+
+
+# <a name="references"></a>References
+1. Chang, J., Jung H. & Park, W. (2024). Development of a risk space prediction model based on CCTV images using deep learning: Crowd collapse. International Journal on Advanced Science Engineering Information Technology, 14(1). ISSN: 2088-5334
+2. Haghani, M., Coughlan, M., Crabb, B., Dierickx, A., Feliciani, C., van Gelder, R., Geoerg, P., Hocaoglu, N., Laws, S., Lovreglio, R., Miles, Z., Nicolas, A., O'Toole, W. J., Schaap, S., Semmens, T., Shahhoseini, Z., Spaaij, R., Tatrai, A., Webster, J., & Wilson, A. (2023). A roadmap for the future of crowd safety research and practice: Introducing the Swiss Cheese Model of Crowd Safety and the imperative of a Vision Zero target. Safety Science, 168, 106292. https://doi.org/10.1016/j.ssci.2023.106292
+3. Kim, T., Lan, J. & Lee M. (2023). CrowdStop: Preventing crowd disasters [PowerPoint slides]
+4. Yogameena, B., & Nagananthini, C. (2017). Computer vision based crowd disaster avoidance system: A survey. International Journal of Disaster Risk Reduction, 22, 95-129. https://doi.org/10.1016/j.ijdrr.2017.02.021
+
     
 
 # <a name="contact-us"></a>Contact Us
