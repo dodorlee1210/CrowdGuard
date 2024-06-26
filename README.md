@@ -29,7 +29,7 @@
 ![alt text](./images/features.png)
 ![alt text](./images/pipeline_design.png)
 
-# <a name="anylogic></a>Anylogic Simulation
+# <a name="anylogic"></a>Anylogic Simulation
 [![Anylogic Simulation](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/25129f26-fc7a-4d6d-85ca-29b0f73c33f7)](https://youtu.be/f7PYw-ElAmc)
 
 # <a name="prototype"></a>Figma Prototype
