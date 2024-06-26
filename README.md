@@ -63,6 +63,8 @@ https://github.com/dodorlee1210/CrowdGuard/assets/123223901/00a3c1bf-8d40-4d4f-9
 3. Haghani, M., Coughlan, M., Crabb, B., Dierickx, A., Feliciani, C., van Gelder, R., Geoerg, P., Hocaoglu, N., Laws, S., Lovreglio, R., Miles, Z., Nicolas, A., O'Toole, W. J., Schaap, S., Semmens, T., Shahhoseini, Z., Spaaij, R., Tatrai, A., Webster, J., & Wilson, A. (2023). A roadmap for the future of crowd safety research and practice: Introducing the Swiss Cheese Model of Crowd Safety and the imperative of a Vision Zero target. Safety Science, 168, 106292. https://doi.org/10.1016/j.ssci.2023.106292
 4. Kim, T., Lan, J. & Lee M. (2023). CrowdStop: Preventing crowd disasters [PowerPoint slides]
 5. Yogameena, B., & Nagananthini, C. (2017). Computer vision based crowd disaster avoidance system: A survey. International Journal of Disaster Risk Reduction, 22, 95-129. https://doi.org/10.1016/j.ijdrr.2017.02.021
+6. Tschechne, M. (2022). Nine Per Square Meter. Max Planck Research Editorial (2), 33-37. https://www.mpg.de/19124742/F002_Focus_032-037.pdf
+7. Moussaïd M, Perozo N, Garnier S, Helbing D, Theraulaz G (2010) The Walking Behaviour of Pedestrian Social Groups and Its Impact on Crowd Dynamics. PLoS ONE 5(4): e10047. https://doi.org/10.1371/journal.pone.0010047
 
     
 
