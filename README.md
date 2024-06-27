@@ -32,7 +32,7 @@
 # <a name="anylogic"></a>Anylogic Simulation
 [![Anylogic Simulation](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/25129f26-fc7a-4d6d-85ca-29b0f73c33f7)](https://youtu.be/f7PYw-ElAmc)
 
-https://github.com/dodorlee1210/CrowdGuard/assets/123223901/8acffdb3-17de-401f-ae82-cfb1dc355c29
+[Anylogic Crowd Density Map](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/8acffdb3-17de-401f-ae82-cfb1dc355c29)
 
 
 # <a name="prototype"></a>Figma Prototype
@@ -41,7 +41,7 @@ https://github.com/dodorlee1210/CrowdGuard/assets/123223901/00a3c1bf-8d40-4d4f-9
 
 
 # <a name="project-demo"></a>Project Demo
-(demo video/images)
+[CrowdGuard Short Demo](https://github.com/dodorlee1210/CrowdGuard/assets/123223901/6130be1e-2c4b-4a7c-8028-ba9c111a23b4)
 
 # <a name="ethical-considerations"></a>Ethical Considerations
 * Usage of global height as scaling factor: there may be bias and inaccuracies with distance measurement in different regions of the world where the average height is much taller or shorter than the global average height used (168.5 cm).
